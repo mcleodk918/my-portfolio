@@ -407,40 +407,112 @@ function showEmailPreview(filename) {
     `;
 }
 
-// Show email preview
-// function showUrlPreview(filename) {
-//     fileViewer.innerHTML = `
-//         <div class="email-preview">
-//             <div class="email-content">
-//                 <button class="btn btn-primary" onclick="downloadFile('Portfolio Examples/${filename}', '${filename}')">
-//                     <i class="fas fa-download"></i>
-//                     Click here to view content
-//                 </button>
-//             </div>
-//         </div>
-//     `;
-// }
 // Show URL preview and handle redirection
-async function showUrlPreview(filename) {
-    const filePath = `Portfolio Examples/${filename}`;
+function showUrlPreview(filename) {
+    // Since we can't use fetch() for local files due to CORS restrictions,
+    // we'll use a predefined mapping for known .url files
+    const urlMappings = {
+        'Facebook Post Example.url': 'https://www.facebook.com/reel/1747720149397278',
+        'Manifold Machine Video.url': 'https://www.youtube.com/watch?v=cIh9kUAD9ZE',
+        'MAV Launch Video.url': 'https://www.youtube.com/watch?v=-cTHXMGZINo',
+        'Type-21 SST Ball Valve Video.url': 'https://www.youtube.com/watch?v=e2GKIQjKxC0'
+    };
     
-    try {
-        // Read the .url file content
-        const response = await fetch(filePath);
-        const content = await response.text();
-        
-        // Parse the URL from the .url file (format: [InternetShortcut]\nURL=http://...)
-        const urlMatch = content.match(/URL=(.+)/i);
-        
-        if (urlMatch && urlMatch[1]) {
-            const url = urlMatch[1].trim();
-            showExternalLink(url, filename);
+    // Try to get the URL from our mapping
+    const url = urlMappings[filename];
+    
+    if (url) {
+        // Try to create an enhanced preview based on the URL type
+        if (url.includes('youtube.com') || url.includes('youtu.be')) {
+            showYouTubePreview(url, filename);
+        } else if (url.includes('facebook.com')) {
+            showFacebookPreview(url, filename);
         } else {
-            throw new Error('Could not parse URL from file');
+            showExternalLink(url, filename);
         }
-    } catch (error) {
-        showError('Error loading URL: ' + error.message);
+    } else {
+        // Fallback: show generic external link interface with file input option
+        showUrlFileInput(filename);
     }
+}
+
+// Show YouTube video preview with embedded player
+function showYouTubePreview(url, filename) {
+    let videoId = '';
+    
+    // Extract video ID from various YouTube URL formats
+    if (url.includes('youtube.com/watch?v=')) {
+        videoId = url.split('v=')[1].split('&')[0];
+    } else if (url.includes('youtu.be/')) {
+        videoId = url.split('youtu.be/')[1].split('?')[0];
+    } else if (url.includes('youtube.com/embed/')) {
+        videoId = url.split('embed/')[1].split('?')[0];
+    }
+    
+    if (videoId) {
+        fileViewer.innerHTML = `
+            <div class="video-preview">
+                <div class="video-container">
+                    <iframe 
+                        src="https://www.youtube.com/embed/${videoId}" 
+                        title="YouTube video player" 
+                        frameborder="0" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                        allowfullscreen
+                        style="width: 100%; height: 400px; min-height: 300px;">
+                    </iframe>
+                </div>
+                <div class="video-actions" style="margin-top: 15px;">
+                    <button class="btn btn-primary" onclick="window.open('${url}', '_blank')">
+                        <i class="fab fa-youtube"></i>
+                        Watch on YouTube
+                    </button>
+                </div>
+            </div>
+        `;
+    } else {
+        showExternalLink(url, filename);
+    }
+}
+
+// Show Facebook content preview with link preview
+function showFacebookPreview(url, filename) {
+    let contentType = 'Facebook Post';
+    let icon = 'fab fa-facebook';
+    
+    // Determine specific Facebook content type
+    if (url.includes('/reel/')) {
+        contentType = 'Facebook Reel';
+        icon = 'fab fa-facebook';
+    } else if (url.includes('/video/')) {
+        contentType = 'Facebook Video';
+        icon = 'fab fa-facebook';
+    } else if (url.includes('/photo/')) {
+        contentType = 'Facebook Photo';
+        icon = 'fab fa-facebook';
+    }
+    
+    fileViewer.innerHTML = `
+        <div class="social-preview">
+            <div class="social-content">
+                <i class="${icon}"></i>
+                <h3>${contentType}</h3>
+                <p>This is a ${contentType.toLowerCase()} showcasing marketing content and engagement strategies.</p>
+                <div class="link-preview">
+                    <small>📱 ${url}</small>
+                </div>
+                <div class="social-actions" style="margin-top: 20px;">
+                    <button class="btn btn-primary" onclick="window.open('${url}', '_blank')">
+                        <i class="${icon}"></i>
+                        View on Facebook
+                    </button>
+                </div>
+                <div class="preview-note" style="margin-top: 15px; padding: 15px; background: #f8f9fa; border-radius: 8px;">
+                    <small><i class="fas fa-info-circle"></i> Click the button above to view this content directly on Facebook. You may need to log in to Facebook to view the full content.</small>
+                </div>
+            </div>
+        </div>
+    `;
 }
 
 // Show generic file preview
@@ -455,6 +527,29 @@ function showFilePreview(filename, extension) {
                     <i class="fas fa-download"></i>
                     Click here to view content
                 </button>
+            </div>
+        </div>
+    `;
+}
+
+// Show URL file input interface when we don't have the URL mapping
+function showUrlFileInput(filename) {
+    fileViewer.innerHTML = `
+        <div class="url-file-interface">
+            <div class="url-content">
+                <i class="fas fa-external-link-alt"></i>
+                <h3>External Content Link</h3>
+                <p>This .url file contains a link to external content. Since we're running in a local environment, 
+                   we need to handle this file specially.</p>
+                <div class="url-actions" style="margin-top: 20px;">
+                    <button class="btn btn-primary" onclick="downloadFile('Portfolio Examples/${filename}', '${filename}')">
+                        <i class="fas fa-download"></i>
+                        Download URL File
+                    </button>
+                </div>
+                <div class="url-note" style="margin-top: 15px; padding: 15px; background: #f8f9fa; border-radius: 8px;">
+                    <small><i class="fas fa-info-circle"></i> Download the .url file and double-click it to open the external content in your default browser.</small>
+                </div>
             </div>
         </div>
     `;
