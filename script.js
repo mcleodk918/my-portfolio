@@ -408,17 +408,39 @@ function showEmailPreview(filename) {
 }
 
 // Show email preview
-function showUrlPreview(filename) {
-    fileViewer.innerHTML = `
-        <div class="email-preview">
-            <div class="email-content">
-                <button class="btn btn-primary" onclick="downloadFile('Portfolio Examples/${filename}', '${filename}')">
-                    <i class="fas fa-download"></i>
-                    Click here to view content
-                </button>
-            </div>
-        </div>
-    `;
+// function showUrlPreview(filename) {
+//     fileViewer.innerHTML = `
+//         <div class="email-preview">
+//             <div class="email-content">
+//                 <button class="btn btn-primary" onclick="downloadFile('Portfolio Examples/${filename}', '${filename}')">
+//                     <i class="fas fa-download"></i>
+//                     Click here to view content
+//                 </button>
+//             </div>
+//         </div>
+//     `;
+// }
+// Show URL preview and handle redirection
+async function showUrlPreview(filename) {
+    const filePath = `Portfolio Examples/${filename}`;
+    
+    try {
+        // Read the .url file content
+        const response = await fetch(filePath);
+        const content = await response.text();
+        
+        // Parse the URL from the .url file (format: [InternetShortcut]\nURL=http://...)
+        const urlMatch = content.match(/URL=(.+)/i);
+        
+        if (urlMatch && urlMatch[1]) {
+            const url = urlMatch[1].trim();
+            showExternalLink(url, filename);
+        } else {
+            throw new Error('Could not parse URL from file');
+        }
+    } catch (error) {
+        showError('Error loading URL: ' + error.message);
+    }
 }
 
 // Show generic file preview
