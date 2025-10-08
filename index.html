@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kristin McLeod - Professional Portfolio</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header Section -->
+    <header class="header">
+        <div class="header-content">
+            <h1>Kristin McLeod Boutrouche</h1>
+            <p>I am a strategic and hard-working marketing professional with nearly eight years of marketing experience. During my seven-
+year tenure at Asahi/America, I've had the opportunity to explore every aspect of marketing. I've not only developed my skills
+but also revitalized our marketing department, implementing fresh strategies through different channels that have proven
+effective in lead generation and sales growth. My expertise lies in working with cross-functional teams to create strategic
+B2B marketing plans that drive business growth. I am passionate about continuous improvement, innovation, creativity and
+delivering measurable sales growth.</p>
+            <div class="header-actions">
+                <button id="resumeBtn" class="btn btn-primary resume-btn">
+                    <i class="fas fa-user-circle"></i>
+                    Professional Resume
+                </button>
+                <a href="#portfolio" class="btn btn-secondary">
+                    <i class="fas fa-briefcase"></i>
+                    View Portfolio
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Filter Navigation -->
+    <section class="filter-section">
+        <div class="container">
+            <div id="filters" class="filters"></div>
+        </div>
+    </section>
+
+    <!-- Portfolio Section -->
+    <section class="portfolio-section">
+        <div class="container">
+            <div id="portfolio" class="portfolio-grid"></div>
+        </div>
+    </section>
+
+    <!-- Modal for File Viewing -->
+    <div id="fileModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-info">
+                    <h2 id="modalTitle"></h2>
+                    <p id="modalDescription"></p>
+                </div>
+                <div class="modal-actions">
+                    <button id="downloadBtn" class="btn btn-secondary">
+                        <i class="fas fa-download"></i>
+                        Download
+                    </button>
+                    <button class="modal-close">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div id="fileViewer" class="file-viewer"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 Kristin McLeod. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
