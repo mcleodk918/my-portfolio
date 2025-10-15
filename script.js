@@ -2,8 +2,6 @@
 const portfolioItems = [
     {
         "filename": [ "tec-doc/data-center/Data Center LinkedIn Post.PNG",
-                    "tec-doc/data-center/Data Centers, Part One_ General Overview and Modular Design - Asahi_America.pdf",
-                    "tec-doc/data-center/Data Centers, Part Two_ Air Cooling and Liquid Cooling in Data Centers.pdf",
                     "https://www.asahi-america.com/data-centers-part-two-air-cooling-and-liquid-cooling-in-data-centers/",
                     "https://www.asahi-america.com/data-centers-part-one-general-overview-and-modular-design/"],
         "title": "Data Center Marketing",
